@@ -1,0 +1,28 @@
+-- 데이터베이스 이름은 프로젝트명_학번 형식입니다.
+CREATE DATABASE IF NOT EXISTS diary_20514
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE diary_20514;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '회원 고유 번호',
+  email VARCHAR(100) NOT NULL UNIQUE COMMENT '회원 이메일(중복 불가)',
+  password VARCHAR(255) NOT NULL COMMENT '서버에서 bcrypt로 해시한 비밀번호',
+  nickname VARCHAR(50) NOT NULL COMMENT '회원 닉네임',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '회원 생성 시각',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '회원 정보 수정 시각'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS diaries (
+  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '일기 고유 번호',
+  user_id INT NOT NULL COMMENT '일기 작성 회원 번호(users.id 참조)',
+  title VARCHAR(150) NOT NULL COMMENT '일기 제목',
+  content TEXT NOT NULL COMMENT '일기 내용',
+  diary_date DATE NOT NULL COMMENT '일기 작성 대상 날짜',
+  mood VARCHAR(20) NOT NULL COMMENT '작성 시 기분',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '일기 생성 시각',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '일기 수정 시각',
+  CONSTRAINT fk_diaries_user_id FOREIGN KEY (user_id)
+    REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
