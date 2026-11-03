@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import pool from './db.js';
 import authRouter from './routes/auth.js';
 import usersRouter from './routes/users.js';
+import diariesRouter from './routes/diaries.js';
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(serverDirectory, '.env') });
@@ -20,6 +21,7 @@ const port = Number(process.env.PORT || 5000);
 app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/diaries', diariesRouter);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

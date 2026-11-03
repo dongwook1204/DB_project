@@ -5,6 +5,9 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import MyPage from './pages/MyPage.jsx';
+import DiaryDetailPage from './pages/DiaryDetailPage.jsx';
+import DiaryFormPage from './pages/DiaryFormPage.jsx';
+import AuthorsPage from './pages/AuthorsPage.jsx';
 
 export const AuthContext = createContext(null);
 
@@ -65,6 +68,10 @@ export default function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/diaries/with-authors" element={<AuthorsPage />} />
+            <Route path="/diaries/new" element={user ? <DiaryFormPage /> : <Navigate to="/login" replace />} />
+            <Route path="/diaries/:id/edit" element={user ? <DiaryFormPage /> : <Navigate to="/login" replace />} />
+            <Route path="/diaries/:id" element={<DiaryDetailPage />} />
             <Route path="/signup" element={user ? <Navigate to="/mypage" replace /> : <SignupPage />} />
             <Route path="/login" element={user ? <Navigate to="/mypage" replace /> : <LoginPage />} />
             <Route path="/mypage" element={user ? <MyPage /> : <Navigate to="/login" replace />} />

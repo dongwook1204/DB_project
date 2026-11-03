@@ -6,11 +6,33 @@
 
 ## 진행 상태
 
-- 회원가입, 로그인, 프로필 조회·수정, 회원 탈퇴 API를 구현했고 기본 동작을 확인했습니다.
-- 회원 관리 React 화면을 구현했고 client 빌드에 성공했습니다.
-- 브라우저에서 로그인과 프로필 조회·수정을 확인했습니다.
-- 화면의 회원가입, 로그아웃, 탈퇴를 포함한 전체 흐름은 추가 점검이 필요합니다.
-- 일기 CRUD와 회원·일기 JOIN 조회 메뉴는 아직 구현하지 않았습니다.
+- 회원가입, 로그인, 프로필 조회·수정과 탈퇴 등 회원 관리 기능을 구현했습니다.
+- 일기 CRUD API와 전체 목록·상세·작성·수정·삭제 화면을 구현했습니다.
+- 회원·일기 SQL JOIN 조회 API와 작성자별 일기 메뉴를 구현했습니다.
+- 사용자가 기본 동작을 실제로 확인한 결과는 아래와 같습니다.
+  - 회원가입, 로그인, 프로필 조회·수정 성공.
+  - 웹 화면에서 회원 탈퇴 후 재로그인 실패를 확인했고, 탈퇴한 회원의 기존 토큰 조회는 401을 반환했습니다.
+  - MySQL에 저장된 비밀번호가 `$2b$`로 시작하고 길이가 60인 것을 확인했습니다.
+  - 일기 작성 후 상세 내용과 줄바꿈, 새로고침 뒤 일기와 수정한 제목이 유지되는 것을 확인했습니다.
+  - 비로그인 상세 조회가 가능하고, 토큰 없는 작성 요청은 401을 반환했습니다.
+  - 다른 회원 일기의 수정·삭제 요청이 각각 403을 반환했습니다.
+  - 본인 일기 삭제 후 홈 목록과 JOIN 메뉴에서 사라지는 것을 확인했습니다.
+  - 작성자별 일기 메뉴에서 제목과 작성자 닉네임을 확인했습니다.
+  - 탈퇴 후 이동 화면은 로그인 화면이었습니다.
+- 사용자 확인과 별도로, 현재 코드를 읽어 다음 구현 위치를 확인했습니다.
+  - `server/routes/auth.js`에서 `bcrypt.hash`와 `bcrypt.compare`를 사용합니다.
+  - `server/routes/diaries.js`의 `/with-authors` 조회에 SQL `INNER JOIN`이 있습니다.
+- 브라우저 확인은 위 사용자 보고 결과이며, 이 README 갱신 작업에서 별도 테스트를 다시 실행한 것은 아닙니다.
+
+## 기능과 구현 위치
+
+| 기능 | 구현 파일 | API 및 화면 |
+| --- | --- | --- |
+| 회원가입·로그인 | `server/routes/auth.js` | `POST /api/auth/signup`, `POST /api/auth/login` |
+| 프로필 조회·수정·탈퇴 | `server/routes/users.js` | `GET`, `PUT`, `DELETE /api/users/me`; React 화면 `client/src/pages/MyPage.jsx` |
+| 인증 및 회원 존재 확인 | `server/middlewares/auth.js` | 보호된 회원·일기 API에서 Bearer 토큰 검증 |
+| 일기 CRUD | `server/routes/diaries.js` | `/api/diaries`, `/api/diaries/:id`; 화면 `HomePage.jsx`, `DiaryDetailPage.jsx`, `DiaryFormPage.jsx` |
+| 회원·일기 JOIN 조회 | `server/routes/diaries.js` | `GET /api/diaries/with-authors`; `AuthorsPage.jsx` |
 
 ## 개발 환경
 

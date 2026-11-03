@@ -15,6 +15,7 @@ export default function Header() {
     <header className="site-header">
       <Link className="brand" to="/">공유 일기장</Link>
       <nav aria-label="주 메뉴">
+        <Link to="/diaries/with-authors">작성자별 일기</Link>
         {user ? (
           <>
             <Link to="/mypage">마이페이지</Link>
