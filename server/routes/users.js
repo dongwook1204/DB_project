@@ -102,4 +102,23 @@ router.delete('/me', authenticateToken, async (req, res) => {
   }
 });
 
+router.get('/diary-stats', async (req, res) => {
+  try {
+    const [stats] = await pool.execute(
+      `SELECT u.id, u.nickname, COUNT(d.id) AS diary_count
+       FROM users AS u
+       LEFT JOIN diaries AS d ON u.id = d.user_id
+       GROUP BY u.id, u.nickname
+       ORDER BY diary_count DESC, u.id`
+    );
+
+    return res.status(200).json(stats);
+  } catch (error) {
+    console.error('회원별 일기 개수 조회 실패:', error.message);
+    return res.status(500).json({
+      message: '회원별 일기 개수를 불러오지 못했습니다.'
+    });
+  }
+});
+
 export default router;
